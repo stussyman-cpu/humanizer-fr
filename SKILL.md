@@ -1,12 +1,13 @@
 ---
 name: humanizer-fr
-version: 1.0.0
-base: blader/humanizer v2.5.1
+version: 2.0.0
+base: blader/humanizer v2.5.1 + Aboudjem/humanizer-skill
 description: >
   Supprime les marqueurs d'écriture IA pour rendre un texte plus naturel et humain.
-  Version française étendue : 29 patterns originaux + 6 patterns spécifiques au français +
-  checklist d'audit structurée pour le second pass. Basé sur le guide Wikipedia "Signs of AI writing".
-  Utiliser sur demande "humanise", "humaniser", ou "/humanizer".
+  Version française étendue : 35 patterns (29 originaux + 6 FR) + 5 profils de voix +
+  3 modes (réécriture, détection, édition) + checklist d'audit structurée.
+  Utiliser sur demande "humanise", "humaniser", ou "/humanizer-fr".
+  Flags : --voice [casual|professionnel|technique|chaleureux|direct] --mode [detect|edit] --aggressive
 license: MIT
 compatibility: claude-code opencode claude.ai
 ---
@@ -17,16 +18,75 @@ Tu es un éditeur de texte qui identifie et corrige les signes d'écriture gén�
 
 ---
 
+## Modes et flags
+
+### Modes (`--mode`)
+
+| Mode | Ce qu'il fait | Quand l'utiliser |
+|------|---------------|------------------|
+| `rewrite` | Réécriture complète avec injection de voix *(défaut)* | Blog, mémoire, post LinkedIn, mail |
+| `detect` | Rapport de détection uniquement, sans réécriture | Auditer un texte avant de le travailler |
+| `edit` | Modifications minimales sur un fichier en place | Nettoyer une doc, polir un README |
+
+**`rewrite` est le mode par défaut** — pas besoin de le préciser.
+
+### Profils de voix (`--voice`)
+
+| Profil | Personnalité | Idéal pour |
+|--------|-------------|------------|
+| `casual` | Contractions, "je", fragments, phrases courtes | Posts, réseaux sociaux, blogs perso |
+| `professionnel` | Registre soutenu mais concret, humour sec | Rapports, mails pro, documents formels |
+| `technique` | Précision, clarté directe, termes exacts | Docs techniques, READMEs, API |
+| `chaleureux` | "nous/notre", empathie, paragraphes courts | Tutoriels, onboarding, support |
+| `direct` | Phrases au minimum, zéro hedging, voix active | Feedback, comms internes, avis |
+
+**Sans `--voice`** : le skill analyse le registre du texte original et s'y adapte.
+
+### Flag `--aggressive`
+
+Active la transformation maximale : supprime tout ce qui peut l'être, casse le rythme uniforme agressivement, réduit le nombre de mots. À utiliser quand le texte est très chargé en IA.
+
+### Exemples d'appel
+
+```
+/humanizer-fr "ton texte ici"
+/humanizer-fr "texte" --voice casual
+/humanizer-fr "texte" --mode detect
+/humanizer-fr "texte" --voice direct --aggressive
+/humanizer-fr --mode edit --file mon-document.md
+```
+
+---
+
 ## Ta mission
 
-Quand on te donne un texte à humaniser :
+Selon le mode détecté dans l'appel :
 
+**Mode `detect`** :
+1. Scanner les 35 patterns
+2. Produire un rapport : patterns trouvés, sévérité, exemples de passages concernés
+3. Ne pas réécrire
+
+**Mode `edit`** :
+1. Corrections ciblées uniquement (patterns les plus sévères)
+2. Préserver la structure et le style global
+3. Signaler ce qui n'a pas été touché
+
+**Mode `rewrite`** (défaut) :
 1. **Identifier les patterns IA** — scanner les 35 patterns listés ci-dessous (29 originaux + 6 FR)
 2. **Réécrire les sections problématiques** — remplacer les IA-ismes par des alternatives naturelles
 3. **Préserver le sens** — conserver le message central intact
-4. **Maintenir la voix** — respecter le registre (formel, familier, technique, etc.)
+4. **Appliquer le profil de voix** — si `--voice` spécifié, caler sur ce registre ; sinon, adapter au contexte
 5. **Ajouter de l'âme** — ne pas juste supprimer ce qui cloche ; injecter une vraie personnalité
 6. **Double pass obligatoire** — brouillon → audit structuré → version finale
+
+### Burstiness et perplexité (mode rewrite)
+
+Deux signaux que les détecteurs mesurent et que le skill doit corriger :
+
+**Burstiness** — les humains varient la longueur des phrases de façon imprévisible. L'IA écrit en rythme monotone (~18 mots par phrase). Après réécriture, le texte doit alterner : phrases courtes (3-8 mots), phrases moyennes, phrases longues (30+). Vérifier que l'écart-type de longueur est élevé.
+
+**Perplexité** — l'IA choisit toujours le mot statistiquement le plus probable. Injecter des formulations inattendues, des analogies personnelles, des tournures qu'un algorithme n'aurait pas choisies.
 
 ---
 
@@ -519,18 +579,37 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ## PROCESSUS
 
+### Mode `detect`
+
+1. Lire le texte en entier
+2. Scanner les 35 patterns
+3. Produire un rapport structuré :
+   - Score estimé de détection IA (faible / moyen / élevé)
+   - Patterns trouvés, classés par sévérité
+   - Exemples de passages concernés (citer, pas réécrire)
+   - Recommandations priorisées
+
+### Mode `edit`
+
+1. Cibler uniquement les patterns de sévérité élevée
+2. Modifier le minimum nécessaire
+3. Préserver la structure globale
+4. Lister les changements effectués et ce qui reste à corriger
+
+### Mode `rewrite` (défaut)
+
 1. Lire le texte en entier
 2. Identifier tous les patterns présents (noter les numéros)
-3. Réécrire les sections problématiques
-4. Vérifier que le texte révisé :
+3. Appliquer le profil de voix si précisé (ou adapter au contexte)
+4. Réécrire les sections problématiques en variant la burstiness
+5. Vérifier que le texte révisé :
    - Sonne naturel à la lecture à voix haute
-   - Varie la structure des phrases
+   - Varie la longueur des phrases (burstiness élevée)
    - Utilise des détails précis plutôt que des affirmations vagues
-   - Maintient le registre approprié au contexte
    - Utilise des constructions simples (est/sont/a/ont) là où c'est plus direct
-5. Produire le **brouillon**
-6. Passer l'audit structuré (voir ci-dessous)
-7. Produire la **version finale**
+6. Produire le **brouillon**
+7. Passer l'audit structuré (voir ci-dessous)
+8. Produire la **version finale**
 
 ---
 
@@ -570,6 +649,17 @@ Ne pas simplement demander "qu'est-ce qui est encore trop IA ?" — passer cette
 
 ## FORMAT DE SORTIE
 
+**Mode `detect`** :
+1. Score estimé (faible / moyen / élevé)
+2. Liste des patterns détectés avec sévérité et extrait du texte
+3. Recommandations priorisées
+
+**Mode `edit`** :
+1. Texte édité
+2. Liste des changements effectués
+3. Ce qui reste à corriger (si `--aggressive` non activé)
+
+**Mode `rewrite`** :
 1. **Brouillon** — première réécriture
 2. **Audit** — checklist remplie, points restants identifiés (brefs)
 3. **Version finale** — réécriture après audit
@@ -627,6 +717,12 @@ Ne pas simplement demander "qu'est-ce qui est encore trop IA ?" — passer cette
 
 ## RÉFÉRENCE
 
-Ce skill est basé sur [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintenu par WikiProject AI Cleanup. Les 29 patterns originaux sont l'œuvre de [blader/humanizer](https://github.com/blader/humanizer) (MIT). Les 6 patterns supplémentaires (30–35) sont spécifiques au français et ont été ajoutés dans cette version.
+Ce skill est basé sur :
+- [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintenu par WikiProject AI Cleanup
+- [blader/humanizer](https://github.com/blader/humanizer) (MIT) — 29 patterns originaux
+- [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill) (MIT) — modes, profils de voix, burstiness/perplexité
+- [stussyman-cpu/humanizer-fr](https://github.com/stussyman-cpu/humanizer-fr) — 6 patterns français, checklist d'audit structurée
 
-Insight clé de Wikipedia : "Les LLM utilisent des algorithmes statistiques pour deviner ce qui devrait venir ensuite. Le résultat tend vers le résultat statistiquement le plus probable qui s'applique au plus grand nombre de cas."
+Sources scientifiques (via Aboudjem) : GPTZero (burstiness/perplexité), SSRN stylometric study (TTR humain 55.3 vs IA 45.5), Washington Post 328K messages ChatGPT, RAID Benchmark ACL 2024, NeurIPS 2023 (Tulchinskii et al.).
+
+Insight clé : "Les LLM utilisent des algorithmes statistiques pour deviner ce qui devrait venir ensuite. Le résultat tend vers le résultat statistiquement le plus probable qui s'applique au plus grand nombre de cas."
