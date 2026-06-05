@@ -1,10 +1,10 @@
 ---
 name: humanizer-fr
-version: 2.1.0
-base: blader/humanizer v2.5.1 + Aboudjem/humanizer-skill
+version: 2.2.0
+base: blader/humanizer v2.7.0 + Aboudjem/humanizer-skill
 description: >
   Supprime les marqueurs d'écriture IA pour rendre un texte plus naturel et humain.
-  Version française étendue : 35 patterns (29 originaux + 6 FR) + 5 profils de voix +
+  Version française étendue : 36 patterns (30 originaux + 6 FR) + 5 profils de voix +
   3 modes (réécriture, détection, édition) + mode interactif + checklist d'audit structurée.
   Utiliser sur demande "humanise", "humaniser", ou "/humanizer-fr".
   Sans flags : pose 3 questions avant de lancer.
@@ -103,7 +103,7 @@ Active la transformation maximale : supprime tout ce qui peut l'être, casse le 
 Selon le mode détecté dans l'appel :
 
 **Mode `detect`** :
-1. Scanner les 35 patterns
+1. Scanner les 36 patterns
 2. Produire un rapport : patterns trouvés, sévérité, exemples de passages concernés
 3. Ne pas réécrire
 
@@ -113,7 +113,7 @@ Selon le mode détecté dans l'appel :
 3. Signaler ce qui n'a pas été touché
 
 **Mode `rewrite`** (défaut) :
-1. **Identifier les patterns IA** — scanner les 35 patterns listés ci-dessous (29 originaux + 6 FR)
+1. **Identifier les patterns IA** — scanner les 36 patterns listés ci-dessous (30 originaux + 6 FR)
 2. **Réécrire les sections problématiques** — remplacer les IA-ismes par des alternatives naturelles
 3. **Préserver le sens** — conserver le message central intact
 4. **Appliquer le profil de voix** — si `--voice` spécifié, caler sur ce registre ; sinon, adapter au contexte
@@ -182,7 +182,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
-## PATTERNS ORIGINAUX (blader/humanizer v2.5.1)
+## PATTERNS ORIGINAUX (blader/humanizer v2.7.0)
 
 ### PATTERNS DE CONTENU
 
@@ -346,6 +346,8 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 #### 14. Abus de tirets cadratin
 
+> **Règle dure :** Aucun tiret cadratin (—) ni demi-cadratin (–) dans le texte final. Zéro exception. Remplacer par une virgule, des parenthèses, ou restructurer la phrase.
+
 **Avant :**
 > Le terme est principalement promu par les institutions—pas par les habitants eux-mêmes—et cette confusion persiste—même dans les documents officiels.
 
@@ -420,13 +422,21 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 #### 21. Disclaimers de coupure de connaissance
 
-**Mots à surveiller :** à la date de mes dernières données, selon les informations disponibles, bien que les détails précis soient limités, d'après les sources accessibles
+**Mots à surveiller (knowledge cutoff) :** à la date de mes dernières données, selon les informations disponibles, bien que les détails précis soient limités, d'après les sources accessibles
 
-**Avant :**
+**Mots à surveiller (spéculatif) :** il semblerait que X soit discret, la société préfère rester en retrait, peu d'informations sont disponibles sur, X n'a pas souhaité communiquer, dans un souci de confidentialité
+
+**Avant (knowledge cutoff) :**
 > Bien que les détails précis sur la fondation de l'entreprise ne soient pas extensivement documentés dans les sources facilement accessibles, elle semble avoir été créée dans les années 1990.
 
 **Après :**
 > L'entreprise a été fondée en 1994, selon ses documents d'immatriculation.
+
+**Avant (spéculatif) :**
+> Il semblerait que l'entreprise préfère rester en retrait sur cette question et n'ait pas souhaité communiquer davantage.
+
+**Après :**
+> L'entreprise n'a pas répondu aux demandes de commentaire. [Si la non-réponse est vérifiable — sinon, supprimer la phrase.]
 
 ---
 
@@ -528,9 +538,23 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
+#### 30. Écriture diff-ancrée
+
+**Problème :** L'IA décrit ce qui a *changé* plutôt que ce que c'est maintenant. Ce pattern apparaît dans les release notes et comparaisons de versions, mais aussi dans les descriptions générales quand le modèle a été entraîné sur du contenu "avant/après".
+
+**Mots à surveiller :** Cette version introduit, Nous avons ajouté, Par rapport à la version précédente, Le nouveau X permet désormais, Contrairement à avant, Depuis la dernière mise à jour, Ce qui change, Les améliorations apportées
+
+**Avant :**
+> Cette version introduit un nouveau système de cache qui améliore les performances. Contrairement à avant, les requêtes répétées n'atteignent plus la base de données.
+
+**Après :**
+> Le système met les requêtes en cache. Les appels répétés retournent depuis la mémoire sans toucher la base.
+
+---
+
 ## PATTERNS SUPPLÉMENTAIRES — SPÉCIFIQUES AU FRANÇAIS
 
-### 30. Transitions de dissertation
+### 31. Transitions de dissertation
 
 **Problème :** L'IA reproduit la structure de la dissertation française (thèse-antithèse-synthèse) avec des transitions qui annoncent le plan au lieu de faire avancer le texte.
 
@@ -544,7 +568,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
-### 31. Formules de politesse IA-françaises
+### 32. Formules de politesse IA-françaises
 
 **Problème :** En français, l'IA produit des tournures de politesse caractéristiques qui n'apparaissent jamais dans une vraie écriture humaine directe.
 
@@ -558,7 +582,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
-### 32. Sur-structuration (prose découpée inutilement)
+### 33. Sur-structuration (prose découpée inutilement)
 
 **Problème :** L'IA transforme en liste à puces ce qui serait naturellement un paragraphe fluide. Différent du pattern #16 (en-têtes inline) : ici, le problème est le découpage excessif de pensées qui forment un tout.
 
@@ -574,7 +598,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
-### 33. Nominalisation excessive
+### 34. Nominalisation excessive
 
 **Problème :** L'IA transforme des verbes en noms abstraits, ce qui alourdit les phrases et les rend moins directes. C'est un défaut classique du français administratif que l'IA amplifie.
 
@@ -588,7 +612,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
-### 34. Inflation modale (certitude artificielle ou hedging français)
+### 35. Inflation modale (certitude artificielle ou hedging français)
 
 **Problème :** En français, l'IA oscille entre une certitude artificielle ("il est évident que", "il va de soi") et un hedging excessif ("il semblerait que", "on pourrait penser que"). Les deux sonnent faux.
 
@@ -603,7 +627,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 
 ---
 
-### 35. Conclusion en "En conclusion" / "Pour conclure"
+### 36. Conclusion en "En conclusion" / "Pour conclure"
 
 **Problème :** L'IA marque explicitement la fin d'un texte avec des formules qui n'existent dans aucun texte humain naturel sauf les dissertations de lycée.
 
@@ -622,7 +646,7 @@ Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est
 ### Mode `detect`
 
 1. Lire le texte en entier
-2. Scanner les 35 patterns
+2. Scanner les 36 patterns
 3. Produire un rapport structuré :
    - Score estimé de détection IA (faible / moyen / élevé)
    - Patterns trouvés, classés par sévérité
@@ -670,13 +694,14 @@ Ne pas simplement demander "qu'est-ce qui est encore trop IA ?" — passer cette
 ### Checklist mots
 - [ ] Aucun mot de la liste haute fréquence (#7) ?
 - [ ] Aucun "en conclusion", "pour conclure", "il convient de noter" ?
-- [ ] Aucune nominalization évitable (#33) ?
-- [ ] Aucune formule de politesse IA-française (#31) ?
+- [ ] Aucune nominalization évitable (#34) ?
+- [ ] Aucune formule de politesse IA-française (#32) ?
 
 ### Checklist structure
-- [ ] Aucune liste qui devrait être un paragraphe (#32) ?
+- [ ] Aucune liste qui devrait être un paragraphe (#33) ?
 - [ ] Aucun en-tête en Title Case (#17) ?
-- [ ] Aucune section "Défis et perspectives" ou "Pour conclure" isolée (#6, #35) ?
+- [ ] Aucune section "Défis et perspectives" ou "Pour conclure" isolée (#6, #36) ?
+- [ ] Aucune écriture diff-ancrée ("cette version introduit", "par rapport à avant") (#30) ?
 
 ### Checklist contenu
 - [ ] Aucune attribution vague ("les experts estiment") (#5) ?
@@ -759,7 +784,7 @@ Ne pas simplement demander "qu'est-ce qui est encore trop IA ?" — passer cette
 
 Ce skill est basé sur :
 - [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintenu par WikiProject AI Cleanup
-- [blader/humanizer](https://github.com/blader/humanizer) (MIT) — 29 patterns originaux
+- [blader/humanizer](https://github.com/blader/humanizer) (MIT) — 29 patterns originaux, base v2.7.0
 - [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill) (MIT) — modes, profils de voix, burstiness/perplexité
 - [stussyman-cpu/humanizer-fr](https://github.com/stussyman-cpu/humanizer-fr) — 6 patterns français, checklist d'audit structurée
 
