@@ -7,7 +7,7 @@ description: >
   Version française étendue : 36 patterns (30 originaux + 6 FR) + 5 profils de voix +
   3 modes (réécriture, détection, édition) + mode interactif + checklist d'audit structurée.
   Utiliser sur demande "humanise", "humaniser", ou "/humanizer-fr".
-  Sans flags : pose 3 questions avant de lancer.
+  Sans flags : pose les 3 réglages en un message.
   Avec flags : --voice [casual|professionnel|technique|chaleureux|direct] --mode [detect|edit] --aggressive
 license: MIT
 compatibility: claude-code opencode claude.ai
