@@ -1,6 +1,6 @@
 ---
 name: humanizer-fr
-version: 2.2.0
+version: 2.2.1
 base: blader/humanizer v2.7.0 + Aboudjem/humanizer-skill
 description: >
   Supprime les marqueurs d'écriture IA pour rendre un texte plus naturel et humain.
@@ -21,38 +21,35 @@ Tu es un éditeur de texte qui identifie et corrige les signes d'écriture gén�
 
 ## Mode interactif (défaut si aucun flag)
 
-Quand l'utilisateur appelle le skill sans flags — juste `/humanizer-fr` ou "humanise ce texte" — ne pas lancer directement. Poser d'abord trois questions courtes, une par une, et attendre la réponse avant de continuer.
+Quand l'utilisateur appelle sans flags — juste `/humanizer-fr` ou "humanise ce texte" — envoyer UN SEUL message avec les 3 réglages, puis attendre la réponse avant de lancer.
 
-**Question 1 — Mode**
-```
-Quel mode veux-tu ?
-1. Réécriture complète
-2. Détection uniquement (voir ce qui cloche, sans réécrire)
-3. Édition légère (corrections minimales)
-```
+**Message à envoyer :**
 
-**Question 2 — Voix** (uniquement si mode 1 ou 3)
-```
-Quel registre de sortie ?
-1. Casual — blogs, posts, écriture perso
-2. Professionnel — rapports, mails, documents formels
-3. Technique — docs, READMEs, API
-4. Chaleureux — tutoriels, onboarding
-5. Direct — feedback, comms internes
-6. Auto — je m'adapte au registre du texte original
-```
+> Avant de lancer, 3 réglages rapides :
+>
+> **1. Mode**
+> 1. Réécriture complète
+> 2. Détection uniquement (rapport sans réécrire)
+> 3. Édition légère (corrections minimales)
+>
+> **2. Voix** (si mode 1 ou 3)
+> 1. Casual — blogs, posts, perso
+> 2. Professionnel — rapports, mails, formel
+> 3. Technique — docs, READMEs, API
+> 4. Chaleureux — tutoriels, onboarding
+> 5. Direct — feedback, comms internes
+> 6. Auto — j'adapte au registre du texte
+>
+> **3. Intensité** (si mode 1)
+> 1. Standard — réécriture équilibrée
+> 2. Aggressive — transformation maximale
+>
+> Réponds avec 3 chiffres (ex. "1, 3, 1") ou les labels directement.
 
-**Question 3 — Intensité** (uniquement si mode 1)
-```
-Niveau de transformation ?
-1. Standard — réécriture équilibrée
-2. Aggressive — transformation maximale, suppression agressive
-```
-
-Après les trois réponses, confirmer les settings choisis en une ligne puis lancer.
+Après la réponse, confirmer en une ligne puis lancer.
 
 Exemple :
-> "OK — réécriture complète, voix professionnelle, intensité standard. C'est parti."
+> "OK — réécriture complète, voix technique, standard. C'est parti."
 
 **Exception** : si l'utilisateur a déjà fourni des flags (`--voice`, `--mode`, `--aggressive`), ne pas poser de questions — utiliser les flags directement.
 
@@ -84,7 +81,15 @@ Exemple :
 
 ### Flag `--aggressive`
 
-Active la transformation maximale : supprime tout ce qui peut l'être, casse le rythme uniforme agressivement, réduit le nombre de mots. À utiliser quand le texte est très chargé en IA.
+Active la transformation maximale. Critères concrets :
+- Réduction du nombre de mots de ~25%
+- Phrases limitées à 12 mots maximum (sauf exception justifiée par le rythme)
+- Suppression de toutes les transitions et connecteurs (#28, #31)
+- Zéro hedging : tout modal de prudence supprimé (#24, #35)
+- Listes converties en prose quand le contenu le permet (#33)
+- Aucune formule d'introduction ou de conclusion (#20, #36)
+
+À utiliser quand le texte est très chargé en IA ou que l'objectif est une réécriture radicale.
 
 ### Exemples d'appel
 
@@ -155,30 +160,15 @@ Si l'utilisateur fournit un échantillon de sa propre écriture, l'analyser avan
 
 ## PERSONNALITÉ ET ÂME
 
-Supprimer les patterns IA ne suffit pas. Une écriture stérile et sans voix est aussi visible que du slop. Un bon texte a un humain derrière.
+Supprimer les patterns IA ne suffit pas — une écriture stérile est aussi visible que du slop. Après réécriture, vérifier :
 
-### Signes d'une écriture sans âme (même techniquement "propre") :
-
-- Toutes les phrases ont la même longueur et la même structure
-- Aucune opinion, juste du reporting neutre
-- Aucune reconnaissance d'incertitude ou d'ambivalence
-- Pas de perspective à la première personne quand ce serait naturel
-- Aucun humour, aucun relief, aucune personnalité
-- Ça lit comme un article Wikipédia ou un communiqué de presse
-
-### Comment ajouter de la voix :
-
-**Avoir des opinions.** Ne pas juste rapporter des faits — réagir. "Je ne sais vraiment pas quoi penser de ça" est plus humain que lister des pour et des contre de façon équilibrée.
-
-**Varier le rythme.** Phrases courtes, directes. Puis des plus longues qui prennent leur temps avant d'arriver quelque part. Alterner.
-
-**Reconnaître la complexité.** Les humains ont des sentiments mitigés. "C'est impressionnant mais aussi un peu inquiétant" est plus honnête que "C'est impressionnant."
-
-**Utiliser "je" quand c'est approprié.** La première personne n'est pas non-professionnelle — elle est honnête. "Ce qui me revient c'est..." ou "Là où je bloque..." signale un humain qui réfléchit.
-
-**Laisser entrer un peu de désordre.** Une structure parfaite semble algorithmique. Les tangentes, les apartés, les pensées à moitié formulées sont humaines.
-
-**Être précis sur les émotions.** Pas "c'est préoccupant" mais "il y a quelque chose de troublant à voir des agents tourner à 3h du matin pendant que personne ne regarde."
+- **Opinion** — le texte réagit, pas juste rapporte. "Je ne sais vraiment pas quoi penser de ça" > liste équilibrée pour/contre
+- **Rythme** — phrases courtes et longues s'alternent. Pas de plateau monotone à 18 mots
+- **Ambivalence** — "c'est impressionnant mais aussi un peu inquiétant" > "c'est impressionnant"
+- **Première personne** — "là où je bloque..." quand c'est naturel. Pas non-professionnel, honnête
+- **Désordre contrôlé** — une tangente, un aparté, une pensée à moitié formulée. La perfection de structure sonne algorithmique
+- **Précision émotionnelle** — "quelque chose de troublant à voir des agents tourner à 3h du matin" > "préoccupant"
+- **Signal final** — lire à voix haute. Si ça sonne comme un communiqué de presse ou un article Wikipedia, recommencer
 
 ---
 

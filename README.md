@@ -2,7 +2,7 @@
 
 > Supprime les marqueurs d'écriture IA pour rendre un texte plus naturel et humain.
 
-[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](https://github.com/stussyman-cpu/humanizer-fr)
+[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](https://github.com/stussyman-cpu/humanizer-fr)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Compat](https://img.shields.io/badge/compat-Claude%20Code%20%7C%20OpenCode-purple.svg)]()
 
@@ -146,6 +146,7 @@ Sans `--voice` : adaptation automatique au registre du texte original.
 
 | Version | Base | Changements |
 |---------|------|-------------|
+| 2.2.1 | blader/humanizer v2.7.0 | Mode interactif groupé (1 message au lieu de 3), `--aggressive` avec critères concrets, "Personnalité et âme" compressée |
 | 2.2.0 | blader/humanizer v2.7.0 | Pattern #30 (diff-anchored writing), tirets → règle dure, #21 élargi au langage spéculatif |
 | 2.1.0 | blader/humanizer v2.5.1 | Mode interactif (3 questions avant lancement), flag `--aggressive` |
 | 2.0.0 | blader/humanizer v2.5.1 | Version initiale — 35 patterns (29 EN + 6 FR), 5 profils de voix, 3 modes, audit structuré |
