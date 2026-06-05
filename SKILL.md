@@ -784,7 +784,7 @@ Ne pas simplement demander "qu'est-ce qui est encore trop IA ?" — passer cette
 
 Ce skill est basé sur :
 - [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintenu par WikiProject AI Cleanup
-- [blader/humanizer](https://github.com/blader/humanizer) (MIT) — 29 patterns originaux, base v2.7.0
+- [blader/humanizer](https://github.com/blader/humanizer) (MIT) — 30 patterns originaux, base v2.7.0
 - [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill) (MIT) — modes, profils de voix, burstiness/perplexité
 - [stussyman-cpu/humanizer-fr](https://github.com/stussyman-cpu/humanizer-fr) — 6 patterns français, checklist d'audit structurée
 
