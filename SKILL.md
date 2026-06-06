@@ -1,13 +1,13 @@
 ---
 name: humanizer-fr
-version: 2.2.1
+version: 2.3.0
 base: blader/humanizer v2.7.0 + Aboudjem/humanizer-skill
 description: >
   Supprime les marqueurs d'écriture IA pour rendre un texte plus naturel et humain.
   Version française étendue : 36 patterns (30 originaux + 6 FR) + 5 profils de voix +
   3 modes (réécriture, détection, édition) + mode interactif + checklist d'audit structurée.
   Utiliser sur demande "humanise", "humaniser", ou "/humanizer-fr".
-  Sans flags : pose les 3 réglages en un message.
+  Sans flags : pose les 3 réglages en un message. Anti-détection : 6 métriques (burstiness, perplexité, TTR, syntaxe, paragraphes, imperfections).
   Avec flags : --voice [casual|professionnel|technique|chaleureux|direct] --mode [detect|edit] --aggressive
 license: MIT
 compatibility: claude-code opencode claude.ai
@@ -125,13 +125,46 @@ Selon le mode détecté dans l'appel :
 5. **Ajouter de l'âme** — ne pas juste supprimer ce qui cloche ; injecter une vraie personnalité
 6. **Double pass obligatoire** — brouillon → audit structuré → version finale
 
-### Burstiness et perplexité (mode rewrite)
+### Métriques anti-détection (mode rewrite)
 
-Deux signaux que les détecteurs mesurent et que le skill doit corriger :
+Six métriques que Compliatio Magister, GPTZero et Originality.ai mesurent. Toutes doivent être adressées après réécriture.
 
-**Burstiness** — les humains varient la longueur des phrases de façon imprévisible. L'IA écrit en rythme monotone (~18 mots par phrase). Après réécriture, le texte doit alterner : phrases courtes (3-8 mots), phrases moyennes, phrases longues (30+). Vérifier que l'écart-type de longueur est élevé.
+**1. Burstiness phrases**
+Les humains varient la longueur des phrases de façon imprévisible. L'IA écrit en rythme monotone (~18 mots par phrase). Alterner : phrases courtes (3-8 mots), phrases moyennes, phrases longues (30+). Écart-type de longueur élevé.
 
-**Perplexité** — l'IA choisit toujours le mot statistiquement le plus probable. Injecter des formulations inattendues, des analogies personnelles, des tournures qu'un algorithme n'aurait pas choisies.
+**2. Perplexité**
+L'IA choisit toujours le mot statistiquement le plus probable. Injecter des formulations inattendues, des analogies personnelles, des tournures qu'un algorithme n'aurait pas choisies.
+
+**3. TTR — Richesse lexicale**
+Ratio mots uniques / mots totaux. IA ≈ 45%, humain ≈ 55%. Cible : > 50%.
+- Ne jamais répéter le même substantif ou adjectif dans le même paragraphe
+- Trouver une formulation différente à chaque occurrence du même concept sur l'ensemble du texte
+- Distinct du pattern #11 (synonym cycling) : pas de variation dans la même phrase — rotation vocabulaire sur l'ensemble du texte
+
+**4. Diversité syntaxique**
+L'IA écrit quasi-exclusivement en Sujet-Verbe-Objet. Humains varient. Utiliser au moins 3 structures différentes parmi cette liste par tranche de 200 mots :
+- Inversion : "Ce qui frappe ici, c'est..."
+- Fronted adverbial : "Dans ce cas précis, rien ne garantit..."
+- Fragment délibéré : "Pas vraiment." / "Enfin, presque."
+- Question rhétorique : "Et alors ?" / "Mais pourquoi ?"
+- Conjonction en début de phrase : "Mais ce n'est pas tout." / "Et pourtant."
+- Auto-correction : "(— ou plutôt,...)" / "(enfin, si on y réfléchit)"
+- Cleft sentence : "C'est bien là que le problème se pose."
+
+**5. Paragraph burstiness**
+L'IA écrit des blocs de 3-4 phrases uniformes. Mélanger :
+- Paragraphes à 1 phrase (signal humain fort)
+- Paragraphes à 2 phrases
+- Paragraphes à 5-6 phrases
+Règle : jamais 3 paragraphes consécutifs de longueur similaire. Un paragraphe à 1 phrase par page environ.
+
+**6. Imperfections contrôlées**
+La perfection stylistique est le signal le plus fort pour Compliatio. Injecter ~1 imperfection par bloc de 200 mots :
+- Virgule de liaison là où un point serait "correct" (deux propositions reliées par une virgule)
+- Phrase commençant par "Mais" ou "Et" en début de paragraphe
+- Question rhétorique sans réponse immédiate dans le texte
+- Parenthèse qui tangente légèrement le sujet principal
+- Phrase incomplète utilisée pour l'effet rythmique
 
 ---
 
