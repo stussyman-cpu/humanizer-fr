@@ -1,5 +1,5 @@
 ---
-name: humanizer-fr
+name: humanizer-fr 
 version: 2.4.0
 base: blader/humanizer v2.7.0 + Aboudjem/humanizer-skill
 description: >
