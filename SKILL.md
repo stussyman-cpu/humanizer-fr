@@ -1,6 +1,6 @@
 ---
 name: humanizer-fr
-version: 2.3.0
+version: 2.4.0
 base: blader/humanizer v2.7.0 + Aboudjem/humanizer-skill
 description: >
   Supprime les marqueurs d'écriture IA pour rendre un texte plus naturel et humain.
