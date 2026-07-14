@@ -5,6 +5,7 @@
 [![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/stussyman-cpu/humanizer-fr)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Compat](https://img.shields.io/badge/compat-Claude%20Code%20%7C%20OpenCode-purple.svg)]()
+[![Version](https://img.shields.io/badge/version-2.4.0-blue.svg)](https://github.com/stussyman-cpu/humanizer-fr)
 
 Extension française de [blader/humanizer](https://github.com/blader/humanizer) — 36 patterns (30 originaux adaptés + 6 spécifiques au français), 5 profils de voix, 3 modes d'opération, mode interactif.
 
