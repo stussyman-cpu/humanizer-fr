@@ -159,3 +159,11 @@ Sans `--voice` : adaptation automatique au registre du texte original.
 - [blader/humanizer](https://github.com/blader/humanizer) (MIT) — 30 patterns originaux, base v2.7.0
 - [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill) (MIT) — modes, profils de voix, burstiness/perplexité
 - [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) — référence de base
+- ---
+
+## Mode Académique (Mémoires & Thèses)
+
+Voir le fichier [`ACADEMIA.md`](ACADEMIA.md) pour le prompt spécialisé Compilatio.  
+Ce mode est conçu pour les travaux universitaires longs et doit être utilisé section par section.
+
+**Recommandation** : `--voice professionnel --aggressive` (ou sans aggressive pour les parties très théoriques).
