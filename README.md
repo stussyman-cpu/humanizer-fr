@@ -162,6 +162,21 @@ Sans `--voice` : adaptation automatique au registre du texte original.
 - [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) — référence de base
 - ---
 
+---
+
+## Mode Académique (Mémoires & Thèses)
+
+Voir [`ACADEMIA.md`](ACADEMIA.md) pour le prompt spécialisé Compilatio dédié aux travaux universitaires (Master/Doctorat).
+
+**Utilisation recommandée :**
+- `--voice professionnel` ou `--voice technique`
+- Optionnellement `--aggressive` (à utiliser avec modération sur les textes très théoriques)
+
+Ce mode doit être employé **section par section** comme indiqué dans le fichier.
+
+---
+
+
 ## Mode Académique (Mémoires & Thèses)
 
 Voir le fichier [`ACADEMIA.md`](ACADEMIA.md) pour le prompt spécialisé Compilatio.  
